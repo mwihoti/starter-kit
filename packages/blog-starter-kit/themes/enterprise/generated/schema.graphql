@@ -1085,6 +1085,11 @@ type DocumentationLink implements IDocumentationSidebarItem {
   visibility: DocumentationSidebarItemVisibility!
 }
 
+enum DocumentationMemberRole {
+  ADMIN
+  OWNER
+}
+
 type DocumentationPage {
   createdAt: DateTime!
   description: String
@@ -1105,6 +1110,18 @@ type DocumentationPage {
   """Url of the published page."""
   url: String
   visibility: DocumentationSidebarItemVisibility!
+}
+
+"""Contains the pending invite information."""
+type DocumentationProjectInvite implements Node {
+  """The ID of the pending invite."""
+  id: ID!
+  """The role assigned to the user in the publication."""
+  role: DocumentationMemberRole!
+  """
+  Invited Hashnode user, returns null if the user is not a Hashnode user.
+  """
+  user: User!
 }
 
 type DocumentationSection implements IDocumentationNestableSidebarItem & IDocumentationSidebarItem {
@@ -1638,7 +1655,7 @@ type GroupedByDocsOperatingSystemVisitors implements DocsVisitors & Node {
 type GroupedByDocsPageViews implements DocsViews & Node {
   id: ID!
   """The page that these views belong to."""
-  page: DocumentationPage!
+  page: DocumentationPage
   """The aggregated views."""
   total: Int!
 }
@@ -1649,7 +1666,7 @@ Visitors implementation that will be returned if grouping by docs page.
 type GroupedByDocsPageVisitors implements DocsVisitors & Node {
   id: ID!
   """The page that these views belong to."""
-  page: DocumentationPage!
+  page: DocumentationPage
   """The aggregated number of visitors."""
   total: Int!
 }
@@ -3808,6 +3825,7 @@ enum Scope {
   docs_admin_or_owner
   docs_owner
   import_subscribers_to_publication
+  invited_docs_admin
   invited_team_user
   move_draft
   publication_admin

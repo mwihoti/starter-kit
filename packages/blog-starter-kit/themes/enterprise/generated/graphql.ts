@@ -1093,6 +1093,11 @@ export type DocumentationLink = IDocumentationSidebarItem & {
   visibility: DocumentationSidebarItemVisibility;
 };
 
+export enum DocumentationMemberRole {
+  Admin = 'ADMIN',
+  Owner = 'OWNER'
+}
+
 export type DocumentationPage = {
   __typename?: 'DocumentationPage';
   createdAt: Scalars['DateTime']['output'];
@@ -1110,6 +1115,17 @@ export type DocumentationPage = {
   /** Url of the published page. */
   url?: Maybe<Scalars['String']['output']>;
   visibility: DocumentationSidebarItemVisibility;
+};
+
+/** Contains the pending invite information. */
+export type DocumentationProjectInvite = Node & {
+  __typename?: 'DocumentationProjectInvite';
+  /** The ID of the pending invite. */
+  id: Scalars['ID']['output'];
+  /** The role assigned to the user in the publication. */
+  role: DocumentationMemberRole;
+  /** Invited Hashnode user, returns null if the user is not a Hashnode user. */
+  user: User;
 };
 
 export type DocumentationSection = IDocumentationNestableSidebarItem & IDocumentationSidebarItem & {
@@ -1644,7 +1660,7 @@ export type GroupedByDocsPageViews = DocsViews & Node & {
   __typename?: 'GroupedByDocsPageViews';
   id: Scalars['ID']['output'];
   /** The page that these views belong to. */
-  page: DocumentationPage;
+  page?: Maybe<DocumentationPage>;
   /** The aggregated views. */
   total: Scalars['Int']['output'];
 };
@@ -1654,7 +1670,7 @@ export type GroupedByDocsPageVisitors = DocsVisitors & Node & {
   __typename?: 'GroupedByDocsPageVisitors';
   id: Scalars['ID']['output'];
   /** The page that these views belong to. */
-  page: DocumentationPage;
+  page?: Maybe<DocumentationPage>;
   /** The aggregated number of visitors. */
   total: Scalars['Int']['output'];
 };
@@ -4097,6 +4113,7 @@ export enum Scope {
   DocsAdminOrOwner = 'docs_admin_or_owner',
   DocsOwner = 'docs_owner',
   ImportSubscribersToPublication = 'import_subscribers_to_publication',
+  InvitedDocsAdmin = 'invited_docs_admin',
   InvitedTeamUser = 'invited_team_user',
   MoveDraft = 'move_draft',
   PublicationAdmin = 'publication_admin',
